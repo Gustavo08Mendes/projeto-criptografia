@@ -6,7 +6,7 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
-import { Grid, Option, Select, Sheet, Stack } from "@mui/joy";
+import { Grid, Option, Select, Stack } from "@mui/joy";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -16,20 +16,28 @@ import Alert from '../components/alert';
 
 function ModeToggle() {
   const { mode, setMode } = useColorScheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  // necessary for server-side rendering
+  // because mode is undefined on the server
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
+    return null;
+  }
 
   return (
-
     <Button
-      variant="soft" color={mode === 'dark' ? 'warning' : 'primary'}
+      variant="outlined"
       onClick={() => {
         setMode(mode === 'light' ? 'dark' : 'light');
       }}
     >
-      {mode === 'light' ? <DarkModeIcon color="primary" /> : < WbSunnyIcon color="warning" />}
+      {mode === 'light' ? 'Modo Escuro' : 'Modo Claro'}
     </Button>
   );
 }
-
 
 export default function Home() {
 
@@ -158,25 +166,34 @@ export default function Home() {
   }, [matrizzz, descriptografar, tipoBotao]);
 
   return (
-    <Sheet sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', height: '100vh', padding: 0, margin: 0 }}>
-
-      <Sheet sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: 0, mt: '30px', gap: 2 }}>
-        <Sheet sx={{ bgcolor: 'background.body', position: 'fixed', top: 50, right: 50 }}>
-          <CssVarsProvider>
-            <ModeToggle />
-          </CssVarsProvider>
-        </Sheet>
-        <Box>
+    <Stack
+      sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', height: '100vh', padding: 0, margin: 0, bgcolor: 'background.body', Width: '1200px', marginBottom: '100px' }}
+    >
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+        CriptText
+      </Box>
+      <Stack
+        sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
+        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
+        justifyContent={{ xs: 'center', sm: 'center' }}
+      >
+        <Stack
+          sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}
+          justifyContent={{ xs: 'center', sm: 'center' }}
+        >
           <Select value={tipo} onChange={(_, v) => { setTipo(v ? v : '1'); setMensagem(''); setResult(''); }}>
             <Option value="1">Criptografar</Option>
             <Option value="2">Descriptografar</Option>
           </Select>
-        </Box>
-      </Sheet>
+          <CssVarsProvider>
+            <ModeToggle />
+          </CssVarsProvider>
+        </Stack>
+      </Stack>
       <Stack
-        direction={{ xs: 'column', sm: 'row'}}
-        sx={{  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3, mt: '30px' }}
-        width={{ xs: 600, sm: 600, md: 800, lg: 1000 }}
+        direction={{ xs: 'column', sm: 'row' }}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
+        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
       >
         <Textarea
           placeholder="Digite o texto que sera criptografado"
@@ -184,7 +201,7 @@ export default function Home() {
           maxRows={4}
           value={mensagem}
           onChange={e => setMensagem(e.target.value)}
-          sx={{ width: '50%', minHeight: 300, mt: 2, position: 'relative', pt: 3 }}
+          sx={{ width: '100%', minHeight: 300, mt: 2, position: 'relative', pt: 3 }}
           startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
           endDecorator={
             <Typography level="body-xs" sx={{ ml: 'auto' }}>
@@ -197,10 +214,10 @@ export default function Home() {
           minRows={2}
           maxRows={4}
           value={result.length == 1 ? '' : result}
-          sx={{ width: '50%', minHeight: 300, mt: 2, pt: 3, position: 'relative' }}
+          sx={{ width: '100%', minHeight: 300, mt: 2, pt: 3, position: 'relative' }}
           startDecorator={
             <Box
-              sx={{ display: mensagem.length < 1 ? 'none' : 'block', right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'neutral.plainHoverColor', cursor: 'pointer', p: 0, bgcolor: 'transparent', transition: 'all 0.7s', '&:hover': { bgcolor: 'transparent' } }}
+              sx={{ display: mensagem.length < 1 ? 'none' : 'block', right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'neutral.softBg', cursor: 'pointer', p: 0, bgcolor: 'transparent', transition: 'all 0.7s', '&:hover': { bgcolor: 'transparent' } }}
               onClick={() => { navigator.clipboard.writeText(result); }}
             >
               <Alert message={tipo == "0" ? 'Texto Descriptografado copiado' : 'Texto Criptografado copiado'} />
@@ -209,7 +226,7 @@ export default function Home() {
         />
       </Stack>
       <Button
-        sx={{ py: 1, px: 20, mt: 7, maxWidth: 300, transition: 'all 0.7s' }}
+        sx={{ py: 1, px: 10, mt: 7, transition: 'all 0.7s'}}
         onClick={(event) => {
           event.preventDefault(); // Prevent the default behavior of the button
           if (tipo === '1') {
@@ -222,6 +239,6 @@ export default function Home() {
       >
         {tipo == '1' ? 'Criptografar' : 'Descriptografar'}
       </Button>
-    </Sheet>
+    </Stack>
   );
 }
