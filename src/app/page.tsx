@@ -194,6 +194,7 @@ export default function Home() {
         direction={{ xs: 'column', sm: 'row' }}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
         width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
+        height={{ xs: 200, sm: 200, lg: 300 }}
       >
         <Textarea
           placeholder="Digite o texto que sera criptografado"
@@ -201,8 +202,8 @@ export default function Home() {
           maxRows={4}
           value={mensagem}
           onChange={e => setMensagem(e.target.value)}
-          sx={{ width: '100%', minHeight: 300, mt: 2, position: 'relative', pt: 3 }}
-          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); setResult('')}} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
+          sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3 }}
+          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); setResult('') }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
           endDecorator={
             <Typography level="body-xs" sx={{ ml: 'auto' }}>
               {mensagem.length} character(s)
@@ -214,7 +215,7 @@ export default function Home() {
           minRows={2}
           maxRows={4}
           value={result.length == 1 ? '' : result}
-          sx={{ width: '100%', minHeight: 300, mt: 2, pt: 3, position: 'relative' }}
+          sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative' }}
           startDecorator={
             <Box
               sx={{ display: mensagem.length < 1 ? 'none' : 'block', right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'neutral.softBg', cursor: 'pointer', p: 0, bgcolor: 'transparent', transition: 'all 0.7s', '&:hover': { bgcolor: 'transparent' } }}
@@ -225,19 +226,21 @@ export default function Home() {
           readOnly
         />
       </Stack>
-      <Button
-        sx={{ py: 1, px: 10, mt: 7, transition: 'all 0.7s', bgcolor: tipo === '1' ? 'primary.softColor' : 'success.plainColor', color: tipo === '1' ? 'neutral.softHoverBg' : 'success.softHoverBg', '&:hover': { bgcolor: tipo === '1' ? 'primary.softColor.500' : 'success.plainColor.500' } }}
-        onClick={(event) => {
-          event.preventDefault(); // Prevent the default behavior of the button
-          if (tipo === '1') {
-            setTipoBotao(1);
-          } else {
-            setTipoBotao(2);
-          }
-        }}
-      >
-        {tipo == '1' ? 'Criptografar' : 'Descriptografar'}
-      </Button>
+      <Stack marginTop={{ xs: 30, sm: 10, lg: 10 }}>
+        <Button
+          sx={{ py: 1, px: 10, transition: 'all 0.7s', bgcolor: tipo === '1' ? 'primary.softColor' : 'success.plainColor', color: tipo === '1' ? 'neutral.softHoverBg' : 'success.softHoverBg', '&:hover': { bgcolor: tipo === '1' ? 'primary.softColor.500' : 'success.plainColor.500' } }}
+          onClick={(event) => {
+            event.preventDefault(); // Prevent the default behavior of the button
+            if (tipo === '1') {
+              setTipoBotao(1);
+            } else {
+              setTipoBotao(2);
+            }
+          }}
+        >
+          {tipo == '1' ? 'Criptografar' : 'Descriptografar'}
+        </Button>
+      </Stack>
     </Stack>
   );
 }
