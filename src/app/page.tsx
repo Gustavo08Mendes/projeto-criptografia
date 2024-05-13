@@ -167,9 +167,9 @@ export default function Home() {
 
   return (
     <Stack
-      sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', height: '100vh', padding: 0, margin: 0, bgcolor: 'background.body', Width: '1200px', marginBottom: '100px' }}
+      sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', bgcolor: 'background.body', Width: '1200px', minHeight: '100vh', pb: '50px' }}
     >
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: 'neutral.100' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
         CriptText
       </Box>
       <Stack
@@ -202,7 +202,7 @@ export default function Home() {
           value={mensagem}
           onChange={e => setMensagem(e.target.value)}
           sx={{ width: '100%', minHeight: 300, mt: 2, position: 'relative', pt: 3 }}
-          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
+          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); setResult('')}} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
           endDecorator={
             <Typography level="body-xs" sx={{ ml: 'auto' }}>
               {mensagem.length} character(s)
@@ -226,7 +226,7 @@ export default function Home() {
         />
       </Stack>
       <Button
-        sx={{ py: 1, px: 10, mt: 7, transition: 'all 0.7s'}}
+        sx={{ py: 1, px: 10, mt: 7, transition: 'all 0.7s', bgcolor: tipo === '1' ? 'primary.softColor' : 'success.plainColor', color: tipo === '1' ? 'neutral.softHoverBg' : 'success.softHoverBg', '&:hover': { bgcolor: tipo === '1' ? 'primary.softColor.500' : 'success.plainColor.500' } }}
         onClick={(event) => {
           event.preventDefault(); // Prevent the default behavior of the button
           if (tipo === '1') {
@@ -235,7 +235,6 @@ export default function Home() {
             setTipoBotao(2);
           }
         }}
-        color={tipo === '1' ? 'primary' : 'success'}
       >
         {tipo == '1' ? 'Criptografar' : 'Descriptografar'}
       </Button>
