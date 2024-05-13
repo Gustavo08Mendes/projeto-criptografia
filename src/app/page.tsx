@@ -195,6 +195,7 @@ export default function Home() {
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
         width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
         height={{ xs: 200, sm: 200, lg: 300 }}
+        marginTop={{ xs: 20, sm: 3, lg: 3 }}
       >
         <Textarea
           placeholder="Digite o texto que sera criptografado"
@@ -226,7 +227,7 @@ export default function Home() {
           readOnly
         />
       </Stack>
-      <Stack marginTop={{ xs: 30, sm: 10, lg: 10 }}>
+      <Stack marginTop={{ xs: 25, sm: 10, lg: 10 }}>
         <Button
           sx={{ py: 1, px: 10, transition: 'all 0.7s', bgcolor: tipo === '1' ? 'primary.softColor' : 'success.plainColor', color: tipo === '1' ? 'neutral.softHoverBg' : 'success.softHoverBg', '&:hover': { bgcolor: tipo === '1' ? 'primary.softColor.500' : 'success.plainColor.500' } }}
           onClick={(event) => {
