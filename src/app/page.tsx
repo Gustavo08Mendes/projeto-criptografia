@@ -6,7 +6,7 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
-import { Option, Select, Sheet } from "@mui/joy";
+import { Grid, Option, Select, Sheet, Stack } from "@mui/joy";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -37,7 +37,6 @@ export default function Home() {
   const [tipo, setTipo] = useState<string>('');
   const [mensagem, setMensagem] = useState<string>('');
   const [tipoBotao, setTipoBotao] = useState(0);
-  const [copy, setCopy] = useState(1);
 
 
   //Código para o calculo de matrizes
@@ -70,7 +69,9 @@ export default function Home() {
     'Í': 93, 'Î': 94, 'Ï': 95, 'Ð': 96, 'Ñ': 97, 'Ò': 98, 'Ó': 99, 'Ô': 100, 'Õ': 101,
     'Ö': 102, 'Ø': 103, 'Ù': 104, 'Ú': 105, 'Û': 106, 'Ü': 107, 'Ý': 108, 'Þ': 109, 'ß': 110,
     '1': 111, '2': 112, '3': 113, '4': 114, '5': 115, '6': 116, '7': 117, '8': 118, '9': 119,
-    '0': 120, ',': 121
+    '0': 120, ',': 121, ';': 122, ':': 123, '-': 124, '_': 125, '+': 126, '=': 127, '[': 128,
+    ']': 129, '{': 130, '}': 131, '#': 132, '@': 133, '$': 134, '%': 135, '^': 136, '&': 137,
+    '/': 138, '\\': 139, '<': 140, '>': 141, '|': 142
   };
 
 
@@ -172,15 +173,19 @@ export default function Home() {
           </Select>
         </Box>
       </Sheet>
-      <Sheet sx={{ display: 'flex', gap: 4 }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row'}}
+        sx={{  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3, mt: '30px' }}
+        width={{ xs: 600, sm: 600, md: 800, lg: 1000 }}
+      >
         <Textarea
           placeholder="Digite o texto que sera criptografado"
           minRows={2}
           maxRows={4}
           value={mensagem}
           onChange={e => setMensagem(e.target.value)}
-          sx={{ minWidth: 500, minHeight: 300, mt: 2, position: 'relative', pt: 2 }}
-          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'white', cursor: 'pointer', p: 0, bgcolor: 'red', transition: 'all 0.4s', '&:hover': { bgcolor: 'salmon' } }} onClick={() => { setMensagem(''); }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
+          sx={{ width: '50%', minHeight: 300, mt: 2, position: 'relative', pt: 3 }}
+          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
           endDecorator={
             <Typography level="body-xs" sx={{ ml: 'auto' }}>
               {mensagem.length} character(s)
@@ -192,17 +197,17 @@ export default function Home() {
           minRows={2}
           maxRows={4}
           value={result.length == 1 ? '' : result}
-          sx={{ minWidth: 500, minHeight: 300, mt: 2, pt: 3, position: 'relative' }}
+          sx={{ width: '50%', minHeight: 300, mt: 2, pt: 3, position: 'relative' }}
           startDecorator={
             <Box
-              sx={{ display: result.length < 1 ? 'none' : 'block', right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'neutral.plainHoverColor', cursor: 'pointer', p: 0, bgcolor: 'transparent', transition: 'all 0.7s', '&:hover': { bgcolor: 'transparent' } }}
-              onClick={() => { navigator.clipboard.writeText(result); setCopy(0); }}
+              sx={{ display: mensagem.length < 1 ? 'none' : 'block', right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'neutral.plainHoverColor', cursor: 'pointer', p: 0, bgcolor: 'transparent', transition: 'all 0.7s', '&:hover': { bgcolor: 'transparent' } }}
+              onClick={() => { navigator.clipboard.writeText(result); }}
             >
-              <Alert message={tipo == "0" ? 'Texto Criptografado copiado' : 'Texto Descriptografado copiado'} />
+              <Alert message={tipo == "0" ? 'Texto Descriptografado copiado' : 'Texto Criptografado copiado'} />
             </Box>}
           readOnly
         />
-      </Sheet>
+      </Stack>
       <Button
         sx={{ py: 1, px: 20, mt: 7, maxWidth: 300, transition: 'all 0.7s' }}
         onClick={(event) => {
