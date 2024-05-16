@@ -159,14 +159,11 @@ export default function Home() {
   }
 
   useEffect(() => {
-    /*if (tipo === '1' && mensagem.length != 0 && tipoBotao === 1) {
+    if (tipo === '1' && mensagem.length != 0 && tipoBotao === 1) {
       setResult(tipoBotao === 1 ? mensagemCriptografada.toString() : '');
-    }*/
-    if (tipo === '1') {
-      setResult(mensagemCriptografada.toString());
-    }else if (tipo === '2') {
-      descriptografar();
     }
+    descriptografar();
+  
   }, [matrizzz, descriptografar, tipoBotao]);
 
   return (
