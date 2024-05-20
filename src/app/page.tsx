@@ -6,7 +6,7 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
-import { Grid, Option, Select, Stack } from "@mui/joy";
+import { Grid, Input, Option, Select, Stack } from "@mui/joy";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
@@ -45,6 +45,10 @@ export default function Home() {
   const [tipo, setTipo] = useState<string>('');
   const [mensagem, setMensagem] = useState<string>('');
   const [tipoBotao, setTipoBotao] = useState(0);
+  const [val1, setVal1] = useState(0);
+  const [val2, setVal2] = useState(0);
+  const [val3, setVal3] = useState(0);
+  const [val4, setVal4] = useState(0);
 
 
   //Código para o calculo de matrizes
@@ -109,7 +113,7 @@ export default function Home() {
   matrizzz[1].length < matrizzz[0].length ? matrizzz[1].push(38) : null;
 
   //Criando a chave
-  var chave = [[1, 3], [2, 7]];
+  var chave = [[val1, val2], [val3, val4]];
 
   //Multiplicando as matrizes
   if (tipo == '1' && mensagem.length != 0) {
@@ -118,7 +122,22 @@ export default function Home() {
 
   //**********************  Descriptografia  *********************************
 
+  function matrizInversa(matriz: number[][]) {
+    const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
+    console.log(det);
 
+    if (det === 0) {
+      console.log("A matriz não tem inversa.");
+      return null;
+    }
+
+    const inversa = [
+      [matriz[1][1] / det, -matriz[0][1] / det],
+      [-matriz[1][0] / det, matriz[0][0] / det]
+    ];
+
+    return inversa;
+  }
 
   //pegando o valor criptografado e transformando em um array de inteiros
   if (tipo === '2' && mensagem.length != 0) {
@@ -128,18 +147,14 @@ export default function Home() {
     var meio = Math.ceil(valoresSeparados.length / 2);
     var matrizzz2 = [valoresSeparados.slice(0, meio), valoresSeparados.slice(meio)];
 
-    // var determinante = (chave[0][0] * chave[1][0]) - (chave[0][1] * chave[1][1]);
+    var chaveReversa = matrizInversa(chave);
 
-    // var index1 = chave[0][0] / determinante;
-    // var index2 = chave[0][1] / determinante;
-    // var index3 = chave[1][0] / determinante;
-    // var index4 = chave[1][1] / determinante;
+    console.log(chaveReversa);
+    
 
-    // var chaveReversa = [[index4, -index2], [-index3, index1]];
-
-    var chaveReversa = [[7, -3], [-2, 1]];
-
-    var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizzz2);
+    if (chaveReversa) {
+      var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizzz2);
+    }
 
   }
 
@@ -162,8 +177,10 @@ export default function Home() {
     if (tipo === '1' && mensagem.length != 0 && tipoBotao === 1) {
       setResult(tipoBotao === 1 ? mensagemCriptografada.toString() : '');
     }
+    console.log(descriptografar());
+    
     descriptografar();
-  
+
   }, [matrizzz, descriptografar, tipoBotao]);
 
   return (
@@ -182,13 +199,56 @@ export default function Home() {
           sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}
           justifyContent={{ xs: 'center', sm: 'center' }}
         >
-          <Select value={tipo} onChange={(_, v) => { setTipo(v ? v : '1'); setMensagem(''); setResult(''); }}>
-            <Option value="1">Criptografar</Option>
-            <Option value="2">Descriptografar</Option>
-          </Select>
-          <CssVarsProvider>
-            <ModeToggle />
-          </CssVarsProvider>
+          <Stack sx={{ display: tipo === '1' ? 'flex' : 'none', gap: 2, width: '50%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
+            <Typography >
+              Digite a chave
+            </Typography>
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
+              slotProps={{
+                input: {
+                  min: -10,
+                  max: 10,
+                  step: 1,
+                },
+              }}
+            />
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val2} onChange={(e) => setVal2(parseInt(e.target.value))}
+              slotProps={{
+                input: {
+                  min: -10,
+                  max: 10,
+                  step: 1,
+                },
+              }}
+            />
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val3} onChange={(e) => setVal3(parseInt(e.target.value))}
+              slotProps={{
+                input: {
+                  min: -10,
+                  max: 10,
+                  step: 1,
+                },
+              }}
+            />
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val4} onChange={(e) => setVal4(parseInt(e.target.value))}
+              slotProps={{
+                input: {
+                  min: -10,
+                  max: 10,
+                  step: 1,
+                },
+              }}
+            />
+          </Stack>
+          <Stack sx={{ display: 'flex', gap: 2, width: '50%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}>
+            <Select value={tipo} onChange={(_, v) => { setTipo(v ? v : '1'); setMensagem(''); setResult(''); }}>
+              <Option value="1">Criptografar</Option>
+              <Option value="2">Descriptografar</Option>
+            </Select>
+            <CssVarsProvider>
+              <ModeToggle />
+            </CssVarsProvider>
+          </Stack>
         </Stack>
       </Stack>
       <Stack
