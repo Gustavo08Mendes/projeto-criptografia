@@ -6,12 +6,14 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
-import { Grid, Option, Select, Stack } from "@mui/joy";
+import { Grid, Input, Option, Select, Stack } from "@mui/joy";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import Alert from '../components/alert';
+import CheckIcon from '@mui/icons-material/Check';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 
 function ModeToggle() {
@@ -45,6 +47,12 @@ export default function Home() {
   const [tipo, setTipo] = useState<string>('');
   const [mensagem, setMensagem] = useState<string>('');
   const [tipoBotao, setTipoBotao] = useState(0);
+  const [matrizInvalida, setMatrizInvalida] = useState(1);
+  const [val1, setVal1] = useState(0);
+  const [val2, setVal2] = useState(0);
+  const [val3, setVal3] = useState(0);
+  const [val4, setVal4] = useState(0);
+  const [copy, setCopy] = useState(false);
 
 
   //Código para o calculo de matrizes
@@ -66,8 +74,8 @@ export default function Home() {
   //Array com o alfabeto e sues valores
   var chars: { [key: string]: number } = {
     'a': 10, 'b': 11, 'c': 12, 'd': 13, 'e': 14, 'f': 15, 'g': 16, 'h': 17, 'i': 18, 'j': 19,
-    'k': 20, 'l': 21, 'm': 22, 'n': 23, 'o': 24, 'p': 25, 'q': 26, 'r': 27, 's': 28, 't': 29,
-    'u': 30, 'v': 31, 'w': 32, 'x': 33, 'y': 34, 'z': 35, ' ': 36, '*': 37, '': 38,
+    'k': 20, 'l': 21, 'm': 22, 'n': 23, 'o': 24, 'p': 25, 'q': 26, 'r': 27, 's': 28, 'u': 29,
+    't': 30, 'v': 31, 'w': 32, 'x': 33, 'y': 34, 'z': 35, ' ': 36, '*': 37, '': 38,
     'á': 39, 'à': 40, 'ã': 41, 'â': 42, 'é': 43, 'ê': 44, 'í': 45, 'ó': 46, 'ô': 47,
     'õ': 48, 'ú': 49, 'ç': 50, 'A': 51, 'B': 52, 'C': 53, 'D': 54, 'E': 55, 'F': 56,
     'G': 57, 'H': 58, 'I': 59, 'J': 60, 'K': 61, 'L': 62, 'M': 63, 'N': 64, 'O': 65,
@@ -109,7 +117,7 @@ export default function Home() {
   matrizzz[1].length < matrizzz[0].length ? matrizzz[1].push(38) : null;
 
   //Criando a chave
-  var chave = [[1, 3], [2, 7]];
+  var chave = [[val1, val2], [val3, val4]];
 
   //Multiplicando as matrizes
   if (tipo == '1' && mensagem.length != 0) {
@@ -118,37 +126,72 @@ export default function Home() {
 
   //**********************  Descriptografia  *********************************
 
+  function verificarMatriz(matriz: number[][]) {
 
+    const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
+    console.log(det);
+
+    if (det === 0) {
+      setMatrizInvalida(0);
+    } else {
+      setMatrizInvalida(1);
+    }
+  }
+
+  function matrizInversa(matriz: number[][]) {
+    const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
+    console.log(det);
+
+    const inversa = [
+      [matriz[1][1] / det, -matriz[0][1] / det],
+      [-matriz[1][0] / det, matriz[0][0] / det]
+    ];
+    
+    return inversa;
+  }
+
+  function tranformarEmMatriz(mensagem: number[]) {
+    var meio = Math.ceil(mensagem.length / 2);
+    return [mensagem.slice(0, meio), mensagem.slice(meio)];
+  }
 
   //pegando o valor criptografado e transformando em um array de inteiros
   if (tipo === '2' && mensagem.length != 0) {
 
     let valoresSeparados = mensagem.split(',').map((value) => parseInt(value));
 
-    var meio = Math.ceil(valoresSeparados.length / 2);
-    var matrizzz2 = [valoresSeparados.slice(0, meio), valoresSeparados.slice(meio)];
+    var matrizzz2 = tranformarEmMatriz(valoresSeparados);
 
-    // var determinante = (chave[0][0] * chave[1][0]) - (chave[0][1] * chave[1][1]);
+    var chaveReversa = matrizInversa(chave);
 
-    // var index1 = chave[0][0] / determinante;
-    // var index2 = chave[0][1] / determinante;
-    // var index3 = chave[1][0] / determinante;
-    // var index4 = chave[1][1] / determinante;
+    console.log(chaveReversa);
 
-    // var chaveReversa = [[index4, -index2], [-index3, index1]];
+    if (chaveReversa) {
+      console.log(matrizzz2);
+      
+      var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizzz2);
 
-    var chaveReversa = [[7, -3], [-2, 1]];
+      console.log(menssagemDescriptografada);
 
-    var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizzz2);
+      var caracteres = []
+
+      for (let m = 0; m < menssagemDescriptografada.length; m++) {
+        for (let n = 0; n < menssagemDescriptografada[m].length; n++) {
+          caracteres.push(Math.round(menssagemDescriptografada[m][n]));
+        }
+      }
+      var matrizVerificada = tranformarEmMatriz(caracteres);
+      console.log(matrizVerificada);
+    }
 
   }
 
   const descriptografar = () => {
     if (tipo === '2' && mensagem.length != 0 && tipoBotao === 2) {
       var valormensagem = "";
-      for (var i = 0; i < menssagemDescriptografada.length; i++) {
-        for (var j = 0; j < menssagemDescriptografada[i].length; j++) {
-          var charDescriptografado = Object.keys(chars).find(key => chars[key] === menssagemDescriptografada[i][j]);
+      for (var i = 0; i < matrizVerificada.length; i++) {
+        for (var j = 0; j < matrizVerificada[i].length; j++) {
+          var charDescriptografado = Object.keys(chars).find(key => chars[key] === matrizVerificada[i][j]);
           if (charDescriptografado !== undefined) {
             valormensagem += charDescriptografado;
           }
@@ -159,16 +202,25 @@ export default function Home() {
   }
 
   useEffect(() => {
+    verificarMatriz(chave);
     if (tipo === '1' && mensagem.length != 0 && tipoBotao === 1) {
       setResult(tipoBotao === 1 ? mensagemCriptografada.toString() : '');
     }
+    console.log(descriptografar());
+
+    if (copy == true) {
+      setTimeout(() => {
+        setCopy(false);
+      }, 1000);
+    }
+    
     descriptografar();
-  
+
   }, [matrizzz, descriptografar, tipoBotao]);
 
   return (
     <Stack
-      sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', bgcolor: 'background.body', Width: '1200px', minHeight: '100vh', pb: '50px' }}
+      sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', background: 'primary.softActiveColor', Width: '1200px', minHeight: '100vh', pb: '50px' }}
     >
       <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: 'neutral.100' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
         CriptText
@@ -182,13 +234,28 @@ export default function Home() {
           sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}
           justifyContent={{ xs: 'center', sm: 'center' }}
         >
-          <Select value={tipo} onChange={(_, v) => { setTipo(v ? v : '1'); setMensagem(''); setResult(''); }}>
-            <Option value="1">Criptografar</Option>
-            <Option value="2">Descriptografar</Option>
-          </Select>
-          <CssVarsProvider>
-            <ModeToggle />
-          </CssVarsProvider>
+          <Stack sx={{gap: 2, width: '50%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
+            <Typography >
+              Digite a chave
+            </Typography>
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
+            />
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val2} onChange={(e) => setVal2(parseInt(e.target.value))}
+            />
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val3} onChange={(e) => setVal3(parseInt(e.target.value))}
+            />
+            <Input type="number" defaultValue={0} sx={{ width: 80 }} value={val4} onChange={(e) => setVal4(parseInt(e.target.value))}
+            />
+          </Stack>
+          <Stack sx={{ display: 'flex', gap: 2, width: '50%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}>
+            <Select value={tipo} onChange={(_, v) => { setTipo(v ? v : '1'); setMensagem(''); setResult(''); }}>
+              <Option value="1">Criptografar</Option>
+              <Option value="2">Descriptografar</Option>
+            </Select>
+            <CssVarsProvider>
+              <ModeToggle />
+            </CssVarsProvider>
+          </Stack>
         </Stack>
       </Stack>
       <Stack
@@ -220,12 +287,11 @@ export default function Home() {
           sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative' }}
           startDecorator={
             <Box
-              sx={{ display: mensagem.length < 1 ? 'none' : 'block', right: 5, top: 3, position: 'absolute', zIndex: 1, color: 'neutral.softBg', cursor: 'pointer', p: 0, bgcolor: 'transparent', transition: 'all 0.7s', '&:hover': { bgcolor: 'transparent' } }}
-              onClick={() => { navigator.clipboard.writeText(result); }}
+              sx={{ display: mensagem.length < 1 ? 'none' : 'block', color: copy == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
+              onClick={() => { navigator.clipboard.writeText(result); setCopy(true); }}
             >
-              <Alert message={tipo == "0" ? 'Texto Descriptografado copiado' : 'Texto Criptografado copiado'} />
+              { copy == true ? <CheckIcon /> : <ContentCopyIcon />}
             </Box>}
-          readOnly
         />
       </Stack>
       <Stack marginTop={{ xs: 25, sm: 10, lg: 10 }}>
@@ -239,6 +305,7 @@ export default function Home() {
               setTipoBotao(2);
             }
           }}
+          disabled={matrizInvalida === 0 ? true : false}
         >
           {tipo == '1' ? 'Criptografar' : 'Descriptografar'}
         </Button>
