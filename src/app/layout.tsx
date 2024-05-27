@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        <Stack sx={{ bgcolor: "danger.softDisabledBg", width: '100vw' }}>
+        <Stack sx={{ bgcolor: "neutral.outlinedDisabledBorder", width: '100vw', transition: 'all 0.4s' }}>
           {children}
         </Stack>
       </body>
