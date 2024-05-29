@@ -44,14 +44,20 @@ function ModeToggle() {
 export default function Home() {
 
   const [result, setResult] = useState('');
-  const [tipo, setTipo] = useState<string>('');
+  const [result2, setResult2] = useState('');
   const [mensagem, setMensagem] = useState<string>('');
+  const [mensagem2, setMensagem2] = useState<string>('');
   // const [tipoBotao, setTipoBotao] = useState(0);
   const [matrizInvalida, setMatrizInvalida] = useState(1);
+  const [matrizInvalida2, setMatrizInvalida2] = useState(1);
   const [val1, setVal1] = useState(0);
   const [val2, setVal2] = useState(0);
   const [val3, setVal3] = useState(0);
   const [val4, setVal4] = useState(0);
+  const [val21, setVal21] = useState(0);
+  const [val22, setVal22] = useState(0);
+  const [val23, setVal23] = useState(0);
+  const [val24, setVal24] = useState(0);
   const [copy, setCopy] = useState(false);
 
 
@@ -120,7 +126,7 @@ export default function Home() {
   var chave = [[val1, val2], [val3, val4]];
 
   //Multiplicando as matrizes
-  if (tipo == '1' && mensagem.length != 0) {
+  if (mensagem.length != 0) {
     var mensagemCriptografada = multiplicarMatrizes(chave, matrizzz);
   }
 
@@ -136,10 +142,19 @@ export default function Home() {
     } else {
       setMatrizInvalida(1);
     }
+
+    const det2 = val21 * val24 - val22 * val23;
+    if (det2 === 0) {
+      setMatrizInvalida2(0);
+    } else {
+      setMatrizInvalida2(1);
+    }
   }
 
   function matrizInversa(matriz: number[][]) {
+
     const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
+
     console.log(det);
 
     const inversa = [
@@ -156,13 +171,15 @@ export default function Home() {
   }
 
   //pegando o valor criptografado e transformando em um array de inteiros
-  if (tipo === '2' && mensagem.length != 0) {
+  if (mensagem2.length != 0) {
 
-    let valoresSeparados = mensagem.split(',').map((value) => parseInt(value));
+    let valoresSeparados = mensagem2.split(',').map((value) => parseInt(value));
 
     var matrizzz2 = tranformarEmMatriz(valoresSeparados);
 
-    var chaveReversa = matrizInversa(chave);
+    var chaveDescriptografar = [[val21, val22], [val23, val24]];
+
+    var chaveReversa = matrizInversa(chaveDescriptografar);
 
     console.log(chaveReversa);
 
@@ -187,7 +204,7 @@ export default function Home() {
   }
 
   const descriptografar = () => {
-    if (tipo === '2' && mensagem.length != 0) {
+    if (mensagem2.length != 0) {
       var valormensagem = "";
       for (var i = 0; i < matrizVerificada.length; i++) {
         for (var j = 0; j < matrizVerificada[i].length; j++) {
@@ -197,18 +214,22 @@ export default function Home() {
           }
         }
       }
-      setResult(valormensagem);
+      setResult2(valormensagem);
     }
   }
 
   useEffect(() => {
+
     verificarMatriz(chave);
-    if (tipo === '1' && mensagem.length != 0) {
+
+    if (mensagem.length != 0) {
       setResult(mensagemCriptografada.toString());
     }
+
     if (mensagem.length == 0) {
       mensagem.length == 0 ? setResult('') : null;
     }
+
     if (copy == true) {
       setTimeout(() => {
         setCopy(false);
@@ -223,8 +244,8 @@ export default function Home() {
     <Stack
       sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', minHeight: '100vh', pb: '50px' }}
     >
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', bgcolor: 'neutral.outlinedDisabledBorder' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
-        <img src="./" alt="" />
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center'}} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+        <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>CRIPTOGRAFIA</Typography>
       </Box>
       <Stack
         sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
@@ -249,10 +270,6 @@ export default function Home() {
             />
           </Stack>
           <Stack sx={{ display: 'flex', gap: 2, width: '50%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}>
-            <Select value={tipo} onChange={(_, v) => { setTipo(v ? v : '1'); setMensagem(''); setResult(''); }}>
-              <Option value="1">Criptografar</Option>
-              <Option value="2">Descriptografar</Option>
-            </Select>
             <CssVarsProvider>
               <ModeToggle />
             </CssVarsProvider>
@@ -263,7 +280,7 @@ export default function Home() {
         direction={{ xs: 'column', sm: 'row' }}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
         width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
-        height={{ xs: 200, sm: 200, lg: 300 }}
+        height={{ xs: 200, sm: 200, lg: 200 }}
         marginTop={{ xs: 20, sm: 3, lg: 3 }}
       >
         <Textarea
@@ -298,22 +315,72 @@ export default function Home() {
           readOnly
         />
       </Stack>
-      {/* <Stack marginTop={{ xs: 25, sm: 10, lg: 10 }}>
-        <Button
-          sx={{ py: 1, px: 10, transition: 'all 0.7s', bgcolor: tipo === '1' ? 'primary.softColor' : 'success.plainColor', color: tipo === '1' ? 'neutral.softHoverBg' : 'success.softHoverBg', '&:hover': { bgcolor: tipo === '1' ? 'primary.softColor.500' : 'success.plainColor.500' } }}
-          onClick={(event) => {
-            event.preventDefault(); // Prevent the default behavior of the button
-            if (tipo === '1') {
-              setTipoBotao(1);
-            } else {
-              setTipoBotao(2);
-            }
-          }}
-          disabled={matrizInvalida === 0 ? true : false}
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4}} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+        <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>DESCRIPTOGRAFIA</Typography>
+      </Box>
+      <Stack
+        sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
+        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
+        justifyContent={{ xs: 'center', sm: 'center' }}
+      >
+        <Stack
+          sx={{ display: 'flex', width: '100%', alignItems: 'end', justifyContent: 'start', flexDirection: 'row', mr: 1.5 }}
+          justifyContent={{ xs: 'center', sm: 'center' }}
         >
-          {tipo == '1' ? 'Criptografar' : 'Descriptografar'}
-        </Button>
-      </Stack> */}
+          <Stack sx={{ gap: 2, width: '50%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
+            <Typography sx={{ fontWeight: 'bold' }}>
+              Chave:
+            </Typography>
+            <Input type="number" sx={{ width: 80 }} value={val21} onChange={(e) => setVal21(parseInt(e.target.value))}
+            />
+            <Input type="number" sx={{ width: 80 }} value={val22} onChange={(e) => setVal22(parseInt(e.target.value))}
+            />
+            <Input type="number" sx={{ width: 80 }} value={val23} onChange={(e) => setVal23(parseInt(e.target.value))}
+            />
+            <Input type="number" sx={{ width: 80 }} value={val24} onChange={(e) => setVal24(parseInt(e.target.value))}
+            />
+          </Stack>
+        </Stack>
+      </Stack>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
+        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
+        height={{ xs: 200, sm: 200, lg: 200 }}
+        marginTop={{ xs: 20, sm: 3, lg: 3 }}
+      >
+        <Textarea
+          placeholder={matrizInvalida2 != 0 ? "Digite o texto que sera decriptografado" : "Chave inválida"}
+          minRows={2}
+          maxRows={4}
+          value={mensagem2}
+          onChange={e => setMensagem2(e.target.value)}
+          sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3, transition: 'all 0.4s' }}
+          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem2(''); setResult2('') }} disabled={mensagem2.length == 0}><DeleteForeverIcon /></Button>}
+          color={matrizInvalida2 != 0 ? 'neutral' : 'danger'}
+          endDecorator={
+            <Typography level="body-xs" sx={{ ml: 'auto' }}>
+              {mensagem2.length} character(s)
+            </Typography>
+          }
+          readOnly={matrizInvalida2 != 0 ? false : true}
+        />
+        <Textarea
+          placeholder="Aqui sera exibido a descriptografado..."
+          minRows={2}
+          maxRows={4}
+          value={result2}
+          sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative', transition: 'all 0.4s' }}
+          startDecorator={
+            <Box
+              sx={{ display: mensagem2.length < 1 ? 'none' : 'block', color: copy == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
+              onClick={() => { navigator.clipboard.writeText(result2); setCopy(true); }}
+            >
+              {copy == true ? <CheckIcon /> : <ContentCopyIcon />}
+            </Box>}
+          readOnly
+        />
+      </Stack>
     </Stack>
   );
 }
