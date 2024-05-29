@@ -135,7 +135,6 @@ export default function Home() {
   function verificarMatriz(matriz: number[][]) {
 
     const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
-    // console.log(det);
 
     if (det === 0) {
       setMatrizInvalida(0);
@@ -144,6 +143,7 @@ export default function Home() {
     }
 
     const det2 = val21 * val24 - val22 * val23;
+
     if (det2 === 0) {
       setMatrizInvalida2(0);
     } else {
@@ -154,8 +154,6 @@ export default function Home() {
   function matrizInversa(matriz: number[][]) {
 
     const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
-
-    console.log(det);
 
     const inversa = [
       [matriz[1][1] / det, -matriz[0][1] / det],
@@ -181,24 +179,24 @@ export default function Home() {
 
     var chaveReversa = matrizInversa(chaveDescriptografar);
 
-    console.log(chaveReversa);
 
     if (chaveReversa) {
-      console.log(matrizzz2);
 
       var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizzz2);
 
-      console.log(menssagemDescriptografada);
+      // console.log(menssagemDescriptografada);
+      
 
-      var caracteres = []
+      // var caracteres = []
 
-      for (let m = 0; m < menssagemDescriptografada.length; m++) {
-        for (let n = 0; n < menssagemDescriptografada[m].length; n++) {
-          caracteres.push(Math.round(menssagemDescriptografada[m][n]));
-        }
-      }
-      var matrizVerificada = tranformarEmMatriz(caracteres);
-      console.log(matrizVerificada);
+      // for (let m = 0; m < menssagemDescriptografada.length; m++) {
+      //   for (let n = 0; n < menssagemDescriptografada[m].length; n++) {
+      //     caracteres.push(Math.round(menssagemDescriptografada[m][n]));
+      //   }
+      // }
+      // console.log(caracteres);
+      // var matrizVerificada = tranformarEmMatriz(caracteres);
+      // console.log(matrizVerificada);
     }
 
   }
@@ -206,9 +204,9 @@ export default function Home() {
   const descriptografar = () => {
     if (mensagem2.length != 0) {
       var valormensagem = "";
-      for (var i = 0; i < matrizVerificada.length; i++) {
-        for (var j = 0; j < matrizVerificada[i].length; j++) {
-          var charDescriptografado = Object.keys(chars).find(key => chars[key] === matrizVerificada[i][j]);
+      for (var i = 0; i < menssagemDescriptografada.length; i++) {
+        for (var j = 0; j < menssagemDescriptografada[i].length; j++) {
+          var charDescriptografado = Object.keys(chars).find(key => chars[key] === menssagemDescriptografada[i][j]);
           if (charDescriptografado !== undefined) {
             valormensagem += charDescriptografado;
           }
