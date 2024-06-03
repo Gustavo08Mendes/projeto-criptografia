@@ -9,9 +9,6 @@ import Typography from '@mui/joy/Typography';
 import { Grid, Input, Option, Select, Stack } from "@mui/joy";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import Alert from '../components/alert';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
@@ -46,8 +43,7 @@ export default function Home() {
   const [result, setResult] = useState('');
   const [result2, setResult2] = useState('');
   const [mensagem, setMensagem] = useState<string>('');
-  const [mensagem2, setMensagem2] = useState<string>('');
-  // const [tipoBotao, setTipoBotao] = useState(0);
+  const [mensagemCriptografadaText, setmensagemCriptografadaText] = useState<string>('');
   const [matrizInvalida, setMatrizInvalida] = useState(1);
   const [matrizInvalida2, setMatrizInvalida2] = useState(1);
   const [val1, setVal1] = useState(0);
@@ -59,23 +55,10 @@ export default function Home() {
   const [val23, setVal23] = useState(0);
   const [val24, setVal24] = useState(0);
   const [copy, setCopy] = useState(false);
+  const [copy2, setCopy2] = useState(false);
 
 
   //Código para o calculo de matrizes
-  function multiplicarMatrizes(matriz1: number[][], matriz2: number[][]) {
-    var result: number[][] = [];
-    for (var i = 0; i < matriz1.length; i++) {
-      result[i] = [];
-      for (var j = 0; j < matriz2[0].length; j++) {
-        var sum = 0;
-        for (var k = 0; k < matriz1[0].length; k++) {
-          sum += matriz1[i][k] * matriz2[k][j];
-        }
-        result[i][j] = sum;
-      }
-    }
-    return result;
-  }
 
   //Array com o alfabeto e sues valores
   var chars: { [key: string]: number } = {
@@ -96,10 +79,27 @@ export default function Home() {
     '/': 138, '\\': 139, '<': 140, '>': 141, '|': 142, '~': 143, '`': 144, '"': 145, "'": 146,
   };
 
+  function multiplicarMatrizes(matriz1: number[][], matriz2: number[][]): number[][] {
+    const result: number[][] = [];
+    for (let i = 0; i < matriz1.length; i++) {
+      result[i] = [];
+      for (let j = 0; j < matriz2[0].length; j++) {
+        result[i][j] = 0;
+        for (let k = 0; k < matriz1[0].length; k++) {
+          result[i][j] += matriz1[i][k] * matriz2[k][j];
+        }
+      }
+    }
+    return result;
+  }
+
+  function tranformarEmMatriz(mensagem: number[]) {
+    var meio = Math.ceil(mensagem.length / 2);
+    return [mensagem.slice(0, meio), mensagem.slice(meio)];
+  }
 
   //Criando uma matriz com base no texto
   var matriz: number[][] = Array.from({ length: Math.ceil(mensagem.length / 2) }, () => []);
-
 
   //loop para encontar os valores com base ao alfabeto
   for (var i = 0; i < mensagem.length; i++) {
@@ -108,29 +108,87 @@ export default function Home() {
     if (charEncriptado !== undefined) {
       var rowIndex = Math.floor(i / 2);
       var columnIndex = i % 2;
-      matriz[rowIndex][columnIndex] = charEncriptado; // Insere o caractere encriptado na matriz
+      matriz[rowIndex][columnIndex] = charEncriptado;
     }
   }
 
-  // Transformação da matriz em um array unidimensional
-  var unidimensional = matriz.flat(); // Obtém um array unidimensional a partir da matriz
+  // Transformando a matriz em um array unidimensional
+  var unidimensional = matriz.flat();
 
   // Dividindo o array em duas partes
-  var meio = Math.ceil(unidimensional.length / 2);
-  var matrizzz = [unidimensional.slice(0, meio), unidimensional.slice(meio)]; // Divide o array ao meio e armazena as duas partes em uma nova matriz
+  var matrizBidimensional = tranformarEmMatriz(unidimensional);
 
   // Adicionando valores extras para que as matrizes tenham o mesmo tamanho
-  matrizzz[1].length < matrizzz[0].length ? matrizzz[1].push(38) : null;
+  matrizBidimensional[1].length < matrizBidimensional[0].length ? matrizBidimensional[1].push(38) : null;
 
   //Criando a chave
   var chave = [[val1, val2], [val3, val4]];
 
   //Multiplicando as matrizes
   if (mensagem.length != 0) {
-    var mensagemCriptografada = multiplicarMatrizes(chave, matrizzz);
+    var mensagemCriptografada = multiplicarMatrizes(chave, matrizBidimensional);
   }
 
   //**********************  Descriptografia  *********************************
+
+  //Verificando se as matrizes sao invertiveis
+
+  //Realiza a matriz inversa
+  function matrizInversa(matriz: number[][]) {
+
+    const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
+
+    const inversa = [
+      [matriz[1][1] / det, -matriz[0][1] / det],
+      [-matriz[1][0] / det, matriz[0][0] / det]
+    ];
+
+    return inversa;
+  }
+
+
+
+  //pegando o valor criptografado e transformando em um array de inteiros
+  if (mensagemCriptografadaText.length != 0) {
+
+    let valoresSeparados = mensagemCriptografadaText.split(',').map((value) => parseInt(value));
+
+    var matrizCriptogtafada = tranformarEmMatriz(valoresSeparados);
+
+    var chaveDescriptografar = [[val21, val22], [val23, val24]];
+
+    var chaveReversa = matrizInversa(chaveDescriptografar);
+
+    if (chaveReversa) {
+      var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizCriptogtafada);
+      
+      //aredondo os valores para inteiros e transformando em uma matriz unidimensional
+      var caracteres = []
+      for (let m = 0; m < menssagemDescriptografada.length; m++) {
+        for (let n = 0; n < menssagemDescriptografada[m].length; n++) {
+          caracteres.push(Math.round(menssagemDescriptografada[m][n]));
+        }
+      }
+      var matrizVerificada = tranformarEmMatriz(caracteres);
+    }
+
+  }
+
+  // Função para descriptografar a mensagem criptografada e mostrar na tela
+  const descriptografar = () => {
+    if (mensagemCriptografadaText.length != 0) {
+      var valormensagem = "";
+      for (var i = 0; i < matrizVerificada.length; i++) {
+        for (var j = 0; j < matrizVerificada[i].length; j++) {
+          var charDescriptografado = Object.keys(chars).find(key => chars[key] === matrizVerificada[i][j]);
+          if (charDescriptografado !== undefined) {
+            valormensagem += charDescriptografado;
+          }
+        }
+      }
+      setResult2(valormensagem);
+    }
+  }
 
   function verificarMatriz(matriz: number[][]) {
 
@@ -151,70 +209,6 @@ export default function Home() {
     }
   }
 
-  function matrizInversa(matriz: number[][]) {
-
-    const det = matriz[0][0] * matriz[1][1] - matriz[0][1] * matriz[1][0];
-
-    const inversa = [
-      [matriz[1][1] / det, -matriz[0][1] / det],
-      [-matriz[1][0] / det, matriz[0][0] / det]
-    ];
-
-    return inversa;
-  }
-
-  function tranformarEmMatriz(mensagem: number[]) {
-    var meio = Math.ceil(mensagem.length / 2);
-    return [mensagem.slice(0, meio), mensagem.slice(meio)];
-  }
-
-  //pegando o valor criptografado e transformando em um array de inteiros
-  if (mensagem2.length != 0) {
-
-    let valoresSeparados = mensagem2.split(',').map((value) => parseInt(value));
-
-    var matrizzz2 = tranformarEmMatriz(valoresSeparados);
-
-    var chaveDescriptografar = [[val21, val22], [val23, val24]];
-
-    var chaveReversa = matrizInversa(chaveDescriptografar);
-
-
-    if (chaveReversa) {
-
-      var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizzz2);
-
-      // console.log(menssagemDescriptografada);
-      
-
-      // var caracteres = []
-
-      // for (let m = 0; m < menssagemDescriptografada.length; m++) {
-      //   for (let n = 0; n < menssagemDescriptografada[m].length; n++) {
-      //     caracteres.push(Math.round(menssagemDescriptografada[m][n]));
-      //   }
-      // }
-      // console.log(caracteres);
-      // var matrizVerificada = tranformarEmMatriz(caracteres);
-      // console.log(matrizVerificada);
-    }
-
-  }
-
-  const descriptografar = () => {
-    if (mensagem2.length != 0) {
-      var valormensagem = "";
-      for (var i = 0; i < menssagemDescriptografada.length; i++) {
-        for (var j = 0; j < menssagemDescriptografada[i].length; j++) {
-          var charDescriptografado = Object.keys(chars).find(key => chars[key] === menssagemDescriptografada[i][j]);
-          if (charDescriptografado !== undefined) {
-            valormensagem += charDescriptografado;
-          }
-        }
-      }
-      setResult2(valormensagem);
-    }
-  }
 
   useEffect(() => {
 
@@ -234,15 +228,23 @@ export default function Home() {
       }, 1000);
     }
 
+
     descriptografar();
 
-  }, [matrizzz, descriptografar]);
+  }, [matrizBidimensional, descriptografar]);
 
+  useEffect(() => {
+    if (copy2 == true) {
+      setTimeout(() => {
+        setCopy2(false);
+      }, 1000);
+    }
+  }, [copy2]);
   return (
     <Stack
       sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', minHeight: '100vh', pb: '50px' }}
     >
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center'}} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
         <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>CRIPTOGRAFIA</Typography>
       </Box>
       <Stack
@@ -258,7 +260,7 @@ export default function Home() {
             <Typography sx={{ fontWeight: 'bold' }}>
               Chave:
             </Typography>
-            <Input type="number" sx={{ width: 80, borderColor: matrizInvalida === 1 ? 'danger.main' : 'success.main' }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
+            <Input type="number" sx={{ width: 80 }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
             />
             <Input type="number" sx={{ width: 80 }} value={val2} onChange={(e) => setVal2(parseInt(e.target.value))}
             />
@@ -313,7 +315,7 @@ export default function Home() {
           readOnly
         />
       </Stack>
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4}} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
         <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>DESCRIPTOGRAFIA</Typography>
       </Box>
       <Stack
@@ -351,14 +353,14 @@ export default function Home() {
           placeholder={matrizInvalida2 != 0 ? "Digite o texto que sera decriptografado" : "Chave inválida"}
           minRows={2}
           maxRows={4}
-          value={mensagem2}
-          onChange={e => setMensagem2(e.target.value)}
+          value={mensagemCriptografadaText}
+          onChange={e => setmensagemCriptografadaText(e.target.value)}
           sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3, transition: 'all 0.4s' }}
-          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem2(''); setResult2('') }} disabled={mensagem2.length == 0}><DeleteForeverIcon /></Button>}
+          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setmensagemCriptografadaText(''); setResult2('') }} disabled={mensagemCriptografadaText.length == 0}><DeleteForeverIcon /></Button>}
           color={matrizInvalida2 != 0 ? 'neutral' : 'danger'}
           endDecorator={
             <Typography level="body-xs" sx={{ ml: 'auto' }}>
-              {mensagem2.length} character(s)
+              {mensagemCriptografadaText.length} character(s)
             </Typography>
           }
           readOnly={matrizInvalida2 != 0 ? false : true}
@@ -371,10 +373,10 @@ export default function Home() {
           sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative', transition: 'all 0.4s' }}
           startDecorator={
             <Box
-              sx={{ display: mensagem2.length < 1 ? 'none' : 'block', color: copy == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
-              onClick={() => { navigator.clipboard.writeText(result2); setCopy(true); }}
+              sx={{ display: mensagemCriptografadaText.length < 1 ? 'none' : 'block', color: copy2 == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
+              onClick={() => { navigator.clipboard.writeText(result2); setCopy2(true); }}
             >
-              {copy == true ? <CheckIcon /> : <ContentCopyIcon />}
+              {copy2 == true ? <CheckIcon /> : <ContentCopyIcon />}
             </Box>}
           readOnly
         />
