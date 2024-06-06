@@ -57,9 +57,6 @@ export default function Home() {
   const [copy, setCopy] = useState(false);
   const [copy2, setCopy2] = useState(false);
 
-
-  //Código para o calculo de matrizes
-
   //Array com o alfabeto e sues valores
   var chars: { [key: string]: number } = {
     'a': 10, 'b': 11, 'c': 12, 'd': 13, 'e': 14, 'f': 15, 'g': 16, 'h': 17, 'i': 18, 'j': 19,
@@ -79,6 +76,7 @@ export default function Home() {
     '/': 138, '\\': 139, '<': 140, '>': 141, '|': 142, '~': 143, '`': 144, '"': 145, "'": 146,
   };
 
+  //Código para o calculo de matrizes
   function multiplicarMatrizes(matriz1: number[][], matriz2: number[][]): number[][] {
     const result: number[][] = [];
     for (let i = 0; i < matriz1.length; i++) {
@@ -161,17 +159,17 @@ export default function Home() {
 
     if (chaveReversa) {
       var menssagemDescriptografada = multiplicarMatrizes(chaveReversa, matrizCriptogtafada);
-      
-      //aredondo os valores para inteiros e transformando em uma matriz unidimensional
+
       var caracteres = []
       for (let m = 0; m < menssagemDescriptografada.length; m++) {
         for (let n = 0; n < menssagemDescriptografada[m].length; n++) {
           caracteres.push(Math.round(menssagemDescriptografada[m][n]));
         }
       }
-      var matrizVerificada = tranformarEmMatriz(caracteres);
-    }
 
+      var matrizVerificada = tranformarEmMatriz(caracteres);
+
+    }
   }
 
   // Função para descriptografar a mensagem criptografada e mostrar na tela
@@ -228,7 +226,6 @@ export default function Home() {
       }, 1000);
     }
 
-
     descriptografar();
 
   }, [matrizBidimensional, descriptografar]);
@@ -240,11 +237,17 @@ export default function Home() {
       }, 1000);
     }
   }, [copy2]);
+  
   return (
     <Stack
       sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', minHeight: '100vh', pb: '50px' }}
     >
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+      <Stack sx={{ position: 'fixed', right: '70px', top: '70px' }}>
+        <CssVarsProvider>
+          <ModeToggle />
+        </CssVarsProvider>
+      </Stack>
+      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '50px' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
         <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>CRIPTOGRAFIA</Typography>
       </Box>
       <Stack
@@ -252,10 +255,13 @@ export default function Home() {
         width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
         justifyContent={{ xs: 'center', sm: 'center' }}
       >
+
         <Stack
-          sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}
+          sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'column' }}
           justifyContent={{ xs: 'center', sm: 'center' }}
+          flexDirection={{ xs: 'column', sm: 'row' }}
         >
+
           <Stack sx={{ gap: 2, width: '50%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
             <Typography sx={{ fontWeight: 'bold' }}>
               Chave:
@@ -268,11 +274,6 @@ export default function Home() {
             />
             <Input type="number" sx={{ width: 80 }} value={val4} onChange={(e) => setVal4(parseInt(e.target.value))}
             />
-          </Stack>
-          <Stack sx={{ display: 'flex', gap: 2, width: '50%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}>
-            <CssVarsProvider>
-              <ModeToggle />
-            </CssVarsProvider>
           </Stack>
         </Stack>
       </Stack>
@@ -324,7 +325,7 @@ export default function Home() {
         justifyContent={{ xs: 'center', sm: 'center' }}
       >
         <Stack
-          sx={{ display: 'flex', width: '100%', alignItems: 'end', justifyContent: 'start', flexDirection: 'row', mr: 1.5 }}
+          sx={{ display: 'flex', width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row', mr: 1.5 }}
           justifyContent={{ xs: 'center', sm: 'center' }}
         >
           <Stack sx={{ gap: 2, width: '50%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
