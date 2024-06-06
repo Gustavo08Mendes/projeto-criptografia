@@ -6,11 +6,12 @@ import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
 import Textarea from '@mui/joy/Textarea';
 import Typography from '@mui/joy/Typography';
-import { Grid, Input, Option, Select, Stack } from "@mui/joy";
+import { Card, CardContent, Grid, Input, Option, Select, Stack } from "@mui/joy";
 import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import CheckIcon from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import zIndex from "@mui/material/styles/zIndex";
 
 
 function ModeToggle() {
@@ -27,7 +28,7 @@ function ModeToggle() {
   }
 
   return (
-    <Button
+    <Button sx={{ zIndex: 1000000000000000000000 }}
       variant="outlined"
       onClick={() => {
         setMode(mode === 'light' ? 'dark' : 'light');
@@ -237,151 +238,179 @@ export default function Home() {
       }, 1000);
     }
   }, [copy2]);
-  
+
   return (
     <Stack
-      sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', minHeight: '100vh', pb: '50px' }}
+      sx={{ position: 'relative', display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', pb: '50px' }}
+      minHeight={{xs: '140vh', sm: '100vh', md: '100vh', lg: '100vh'}}
     >
-      <Stack sx={{ position: 'fixed', right: '70px', top: '70px' }}>
-        <CssVarsProvider>
+      <Stack sx={{ position: 'absolute', right: '50px', top: '10px', zIndex: 10000 }}>
+        <CssVarsProvider >
           <ModeToggle />
         </CssVarsProvider>
       </Stack>
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '50px' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
-        <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>CRIPTOGRAFIA</Typography>
-      </Box>
       <Stack
-        sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
-        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
-        justifyContent={{ xs: 'center', sm: 'center' }}
+        sx={{
+          minWidth: 300,
+          position: 'relative',
+          marginTop: '50px',
+          height: '100%',
+          bgcolor: 'background: "neutral.outlinedDisabledBorder',
+          border: '2px solid #000',
+          minHeight: '100vh',
+        }}
       >
 
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+          <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>CRIPTOGRAFIA</Typography>
+        </Box>
         <Stack
-          sx={{ display: 'flex', gap: 2, width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'column' }}
+          sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
+          width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
           justifyContent={{ xs: 'center', sm: 'center' }}
-          flexDirection={{ xs: 'column', sm: 'row' }}
         >
 
-          <Stack sx={{ gap: 2, width: '50%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
-            <Typography sx={{ fontWeight: 'bold' }}>
-              Chave:
-            </Typography>
-            <Input type="number" sx={{ width: 80 }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
-            />
-            <Input type="number" sx={{ width: 80 }} value={val2} onChange={(e) => setVal2(parseInt(e.target.value))}
-            />
-            <Input type="number" sx={{ width: 80 }} value={val3} onChange={(e) => setVal3(parseInt(e.target.value))}
-            />
-            <Input type="number" sx={{ width: 80 }} value={val4} onChange={(e) => setVal4(parseInt(e.target.value))}
-            />
+          <Stack
+            sx={{ display: 'flex', width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}
+            justifyContent={{ xs: 'center', sm: 'center' }}
+
+          >
+            <Stack display={{ xs: 'block', sm: 'flex' }} sx={{ gap: 2, width: '100%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row' }}>
+              <Stack textAlign={'center'} marginBottom={{ xs: 3, sm: 0 }}>
+                <Typography sx={{ fontWeight: 'bold' }} >
+                  Chave
+                </Typography>
+              </Stack>
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                <Input type="number" sx={{ width: 80 }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
+                />
+                <Input type="number" sx={{ width: 80 }} value={val2} onChange={(e) => setVal2(parseInt(e.target.value))}
+                />
+                <Input type="number" sx={{ width: 80 }} value={val3} onChange={(e) => setVal3(parseInt(e.target.value))}
+                />
+                <Input type="number" sx={{ width: 80 }} value={val4} onChange={(e) => setVal4(parseInt(e.target.value))}
+                />
+              </Box>
+            </Stack>
           </Stack>
+        </Stack>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
+          width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
+          height={{ xs: 200, sm: 200, lg: 200 }}
+          marginTop={{ xs: 20, sm: 3, lg: 3 }}
+        >
+          <Textarea
+            placeholder={matrizInvalida != 0 ? "Digite o texto que sera criptografado" : "Chave inválida"}
+            minRows={2}
+            maxRows={4}
+            value={mensagem}
+            onChange={e => setMensagem(e.target.value)}
+            sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3, transition: 'all 0.4s' }}
+            startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); setResult('') }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
+            color={matrizInvalida != 0 ? 'neutral' : 'danger'}
+            endDecorator={
+              <Typography level="body-xs" sx={{ ml: 'auto' }}>
+                {mensagem.length} character(s)
+              </Typography>
+            }
+            readOnly={matrizInvalida != 0 ? false : true}
+          />
+          <Textarea
+            placeholder="Aqui sera exibido a criptografia..."
+            minRows={2}
+            maxRows={4}
+            value={result}
+            sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative', transition: 'all 0.4s' }}
+            startDecorator={
+              <Box
+                sx={{ display: mensagem.length < 1 ? 'none' : 'block', color: copy == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
+                onClick={() => { navigator.clipboard.writeText(result); setCopy(true); }}
+              >
+                {copy == true ? <CheckIcon /> : <ContentCopyIcon />}
+              </Box>}
+            readOnly
+          />
         </Stack>
       </Stack>
       <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
-        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
-        height={{ xs: 200, sm: 200, lg: 200 }}
+        height={{ xs: 200, sm: 400, lg: 400 }}
         marginTop={{ xs: 20, sm: 3, lg: 3 }}
       >
-        <Textarea
-          placeholder={matrizInvalida != 0 ? "Digite o texto que sera criptografado" : "Chave inválida"}
-          minRows={2}
-          maxRows={4}
-          value={mensagem}
-          onChange={e => setMensagem(e.target.value)}
-          sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3, transition: 'all 0.4s' }}
-          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setMensagem(''); setResult('') }} disabled={mensagem.length == 0}><DeleteForeverIcon /></Button>}
-          color={matrizInvalida != 0 ? 'neutral' : 'danger'}
-          endDecorator={
-            <Typography level="body-xs" sx={{ ml: 'auto' }}>
-              {mensagem.length} character(s)
-            </Typography>
-          }
-          readOnly={matrizInvalida != 0 ? false : true}
-        />
-        <Textarea
-          placeholder="Aqui sera exibido a criptografia..."
-          minRows={2}
-          maxRows={4}
-          value={result}
-          sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative', transition: 'all 0.4s' }}
-          startDecorator={
-            <Box
-              sx={{ display: mensagem.length < 1 ? 'none' : 'block', color: copy == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
-              onClick={() => { navigator.clipboard.writeText(result); setCopy(true); }}
-            >
-              {copy == true ? <CheckIcon /> : <ContentCopyIcon />}
-            </Box>}
-          readOnly
-        />
-      </Stack>
-      <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
-        <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>DESCRIPTOGRAFIA</Typography>
-      </Box>
-      <Stack
-        sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
-        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
-        justifyContent={{ xs: 'center', sm: 'center' }}
-      >
+        <Box sx={{ height: '50px', display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 4 }} width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}>
+          <Typography sx={{ fontWeight: 'bold', fontSize: '30px' }}>DESCRIPTOGRAFIA</Typography>
+        </Box>
         <Stack
-          sx={{ display: 'flex', width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row', mr: 1.5 }}
+          sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: '0', mt: '30px', gap: 2 }}
+          width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
           justifyContent={{ xs: 'center', sm: 'center' }}
+
         >
-          <Stack sx={{ gap: 2, width: '50%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row', pr: 1.5 }}>
-            <Typography sx={{ fontWeight: 'bold' }}>
-              Chave:
-            </Typography>
-            <Input type="number" sx={{ width: 80 }} value={val21} onChange={(e) => setVal21(parseInt(e.target.value))}
-            />
-            <Input type="number" sx={{ width: 80 }} value={val22} onChange={(e) => setVal22(parseInt(e.target.value))}
-            />
-            <Input type="number" sx={{ width: 80 }} value={val23} onChange={(e) => setVal23(parseInt(e.target.value))}
-            />
-            <Input type="number" sx={{ width: 80 }} value={val24} onChange={(e) => setVal24(parseInt(e.target.value))}
-            />
+          <Stack
+            sx={{ display: 'flex', width: '100%', alignItems: 'end', justifyContent: 'end', flexDirection: 'row' }}
+            justifyContent={{ xs: 'center', sm: 'center' }}
+
+          >
+            <Stack display={{ xs: 'block', sm: 'flex' }} sx={{ gap: 2, width: '100%', alignItems: 'center', justifyContent: 'end', flexDirection: 'row' }}>
+              <Stack textAlign={'center'} marginBottom={{ xs: 3, sm: 0 }}>
+                <Typography sx={{ fontWeight: 'bold' }} >
+                  Chave
+                </Typography>
+              </Stack>
+              <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+                <Input type="number" sx={{ width: 80 }} value={val21} onChange={(e) => setVal21(parseInt(e.target.value))}
+                />
+                <Input type="number" sx={{ width: 80 }} value={val22} onChange={(e) => setVal22(parseInt(e.target.value))}
+                />
+                <Input type="number" sx={{ width: 80 }} value={val23} onChange={(e) => setVal23(parseInt(e.target.value))}
+                />
+                <Input type="number" sx={{ width: 80 }} value={val24} onChange={(e) => setVal24(parseInt(e.target.value))}
+                />
+              </Box>
+            </Stack>
           </Stack>
         </Stack>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
+          width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
+          height={{ xs: 200, sm: 200, lg: 200 }}
+          marginTop={{ xs: 20, sm: 3, lg: 3 }}
+        >
+          <Textarea
+            placeholder={matrizInvalida2 != 0 ? "Digite o texto que sera decriptografado" : "Chave inválida"}
+            minRows={2}
+            maxRows={4}
+            value={mensagemCriptografadaText}
+            onChange={e => setmensagemCriptografadaText(e.target.value)}
+            sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3, transition: 'all 0.4s' }}
+            startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setmensagemCriptografadaText(''); setResult2('') }} disabled={mensagemCriptografadaText.length == 0}><DeleteForeverIcon /></Button>}
+            color={matrizInvalida2 != 0 ? 'neutral' : 'danger'}
+            endDecorator={
+              <Typography level="body-xs" sx={{ ml: 'auto' }}>
+                {mensagemCriptografadaText.length} character(s)
+              </Typography>
+            }
+            readOnly={matrizInvalida2 != 0 ? false : true}
+          />
+          <Textarea
+            placeholder="Aqui sera exibido a descriptografado..."
+            minRows={2}
+            maxRows={4}
+            value={result2}
+            sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative', transition: 'all 0.4s' }}
+            startDecorator={
+              <Box
+                sx={{ display: mensagemCriptografadaText.length < 1 ? 'none' : 'block', color: copy2 == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
+                onClick={() => { navigator.clipboard.writeText(result2); setCopy2(true); }}
+              >
+                {copy2 == true ? <CheckIcon /> : <ContentCopyIcon />}
+              </Box>}
+            readOnly
+          />
+        </Stack>
       </Stack>
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, mt: '10px' }}
-        width={{ xs: 300, sm: 600, md: 800, lg: 1200 }}
-        height={{ xs: 200, sm: 200, lg: 200 }}
-        marginTop={{ xs: 20, sm: 3, lg: 3 }}
-      >
-        <Textarea
-          placeholder={matrizInvalida2 != 0 ? "Digite o texto que sera decriptografado" : "Chave inválida"}
-          minRows={2}
-          maxRows={4}
-          value={mensagemCriptografadaText}
-          onChange={e => setmensagemCriptografadaText(e.target.value)}
-          sx={{ width: '100%', minHeight: '100%', mt: 2, position: 'relative', pt: 3, transition: 'all 0.4s' }}
-          startDecorator={<Button sx={{ right: 5, top: 3, position: 'absolute', bgcolor: 'transparent', zIndex: 1, color: 'red', cursor: 'pointer', p: 0, transition: 'all 0.4s', '&:hover': { bgcolor: 'transparent' }, '&:disabled': { bgcolor: 'transparent' } }} onClick={() => { setmensagemCriptografadaText(''); setResult2('') }} disabled={mensagemCriptografadaText.length == 0}><DeleteForeverIcon /></Button>}
-          color={matrizInvalida2 != 0 ? 'neutral' : 'danger'}
-          endDecorator={
-            <Typography level="body-xs" sx={{ ml: 'auto' }}>
-              {mensagemCriptografadaText.length} character(s)
-            </Typography>
-          }
-          readOnly={matrizInvalida2 != 0 ? false : true}
-        />
-        <Textarea
-          placeholder="Aqui sera exibido a descriptografado..."
-          minRows={2}
-          maxRows={4}
-          value={result2}
-          sx={{ width: '100%', minHeight: '100%', mt: 2, pt: 3, position: 'relative', transition: 'all 0.4s' }}
-          startDecorator={
-            <Box
-              sx={{ display: mensagemCriptografadaText.length < 1 ? 'none' : 'block', color: copy2 == false ? 'block' : 'green', right: 5, top: 3, position: 'absolute', zIndex: 1, cursor: 'pointer', p: 0, bgcolor: 'transparent', '&:hover': { bgcolor: 'transparent' } }}
-              onClick={() => { navigator.clipboard.writeText(result2); setCopy2(true); }}
-            >
-              {copy2 == true ? <CheckIcon /> : <ContentCopyIcon />}
-            </Box>}
-          readOnly
-        />
-      </Stack>
-    </Stack>
+    </Stack >
   );
 }
