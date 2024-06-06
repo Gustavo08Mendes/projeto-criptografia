@@ -242,7 +242,7 @@ export default function Home() {
   return (
     <Stack
       sx={{ position: 'relative', display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', pb: '50px' }}
-      minHeight={{xs: '140vh', sm: '100vh', md: '100vh', lg: '100vh'}}
+      minHeight={{xs: '140vh', sm: '140vh', md: '100vh', lg: '100vh'}}
     >
       <Stack sx={{ position: 'absolute', right: '50px', top: '10px', zIndex: 10000 }}>
         <CssVarsProvider >
