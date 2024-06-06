@@ -232,6 +232,10 @@ export default function Home() {
   }, [matrizBidimensional, descriptografar]);
 
   useEffect(() => {
+    console.log(val1);
+    if (isNaN(val1)) {
+      setVal1(0);
+    }
     if (copy2 == true) {
       setTimeout(() => {
         setCopy2(false);
@@ -242,7 +246,7 @@ export default function Home() {
   return (
     <Stack
       sx={{ position: 'relative', display: 'flex', alignItems: 'center', flexDirection: 'column', background: "neutral.outlinedDisabledBorder", Width: '1200px', pb: '50px' }}
-      minHeight={{xs: '140vh', sm: '140vh', md: '100vh', lg: '100vh'}}
+      minHeight={{ xs: '140vh', sm: '140vh', md: '100vh', lg: '100vh' }}
     >
       <Stack sx={{ position: 'absolute', right: '50px', top: '10px', zIndex: 10000 }}>
         <CssVarsProvider >
@@ -282,13 +286,41 @@ export default function Home() {
                 </Typography>
               </Stack>
               <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-                <Input type="number" sx={{ width: 80 }} value={val1} onChange={(e) => setVal1(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val1}
+                  onChange={(e) => {
+                    const value = e.target.value.trim(); // Trim removes leading/trailing spaces
+                    setVal1(value === '' ? 0 : parseInt(value));
+                  }}
                 />
-                <Input type="number" sx={{ width: 80 }} value={val2} onChange={(e) => setVal2(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val2}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal2(value === '' ? 0 : parseInt(value));
+                  }}
                 />
-                <Input type="number" sx={{ width: 80 }} value={val3} onChange={(e) => setVal3(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val3}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal3(value === '' ? 0 : parseInt(value));
+                  }}
                 />
-                <Input type="number" sx={{ width: 80 }} value={val4} onChange={(e) => setVal4(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val4}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal4(value === '' ? 0 : parseInt(value));
+                  }}
                 />
               </Box>
             </Stack>
@@ -359,13 +391,41 @@ export default function Home() {
                 </Typography>
               </Stack>
               <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
-                <Input type="number" sx={{ width: 80 }} value={val21} onChange={(e) => setVal21(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val21}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal21(value === '' ? 0 : parseInt(value, 10));
+                  }}
                 />
-                <Input type="number" sx={{ width: 80 }} value={val22} onChange={(e) => setVal22(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val22}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal22(value === '' ? 0 : parseInt(value, 10));
+                  }}
                 />
-                <Input type="number" sx={{ width: 80 }} value={val23} onChange={(e) => setVal23(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val23}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal23(value === '' ? 0 : parseInt(value, 10));
+                  }}
                 />
-                <Input type="number" sx={{ width: 80 }} value={val24} onChange={(e) => setVal24(parseInt(e.target.value))}
+                <Input
+                  type="number"
+                  sx={{ width: 80 }}
+                  value={val24}
+                  onChange={(e) => {
+                    const value = e.target.value.trim();
+                    setVal24(value === '' ? 0 : parseInt(value, 10));
+                  }}
                 />
               </Box>
             </Stack>
